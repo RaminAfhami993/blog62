@@ -41,6 +41,11 @@ const UserShema = new Schema({
         type: String,
         enum: ['male', 'female', 'other'],
         default: 'male'
+    },
+    role: {
+        type: String,
+        enum: ['admin', 'blogger'],
+        default: 'blogger'
     }
 });
 
