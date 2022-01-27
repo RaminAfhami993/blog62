@@ -1,6 +1,6 @@
 const User = require('../models/user'); 
 
-function init() {
+module.exports = function() {
     User.findOne({role: 'admin'}, (err, existAdmin) => {
         if (err) {
             return console.log('Somthing went wrong in find exist admin!')
@@ -30,4 +30,3 @@ function init() {
 }
 
 
-module.exports = init;
