@@ -39,12 +39,12 @@ app.use(
 
 
 
-app.use((req, res, next) => {
-  console.log('user_sid', req.cookies.user_sid);
-  console.log('sessin', req.session);
+// app.use((req, res, next) => {
+//   console.log('user_sid', req.cookies.user_sid);
+//   console.log('sessin', req.session);
 
-  next();
-})
+//   next();
+// })
 
 
 app.use((req, res, next) => {

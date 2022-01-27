@@ -1,7 +1,10 @@
 const express = require('express');
-const app = require('../app');
+const bcrypt = require('bcrypt');
 const router = express.Router();
-const User = require('../models/user') 
+const User = require('../models/user'); 
+const user = require('../models/user');
+
+
 
 router.get('/registerPage', sessionChecker, (req, res) => {
     res.render('register', {msg: null})
@@ -42,8 +45,7 @@ router.post('/register', (req, res) => {
             firstName: req.body.firstName,
             password: req.body.password
         });
-    
-    
+
         NEW_USER.save((err, user) => {
             if (err) {
                 // return res.status(500).json({msg: "Somthing went wrong"})
@@ -51,9 +53,9 @@ router.post('/register', (req, res) => {
 
             };
     
-            res.redirect('/api/auth/dashboard')
-        });
-    })
+            res.redirect('/api/auth/loginPage')
+        });  
+    });
 });
 
 
@@ -64,7 +66,7 @@ router.post('/login', (req, res) => {
     };
 
 
-    User.findOne({username: req.body.username, password: req.body.password}, (err, user) => {
+    User.findOne({username: req.body.username}, (err, user) => {
         if (err) {
             return res.render('login', {msg: 'Somthing went wrong'})
         } 
@@ -72,9 +74,19 @@ router.post('/login', (req, res) => {
             return res.render('login', {msg: 'Wrong username or password'})
         }
 
-        req.session.user = user;
+        bcrypt.compare(req.body.password, user.password, function(err, result) {
+            if (err) {
+                return res.render('login', {msg: 'Somthing went wrong'})
+            } 
 
-        res.redirect('/api/auth/dashboard')
+            if (!result) {
+                return res.render('login', {msg: 'Wrong username or password'})
+            };
+
+            req.session.user = user;
+
+            res.redirect('/api/auth/dashboard')
+        });
     })
 });
 
@@ -91,6 +103,20 @@ router.get('/logout', (req, res) => {
     res.clearCookie('user_sid');
     res.redirect('/api/auth/loginPage')
 })
+
+
+// router.put('/updateUser', (req, res) => {
+//     User.findById(req.session.user._id, function(err, result) {
+
+//         result.username = req.body.username;
+//         result.password = req.body.newPass;
+
+
+
+//         result.save()
+
+//     })
+// })
 
 
 

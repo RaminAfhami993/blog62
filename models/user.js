@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
 
 const Schema = mongoose.Schema;
 
@@ -14,7 +16,7 @@ const UserShema = new Schema({
     password: {
         type: String,
         required: true,
-        maxlength: 50,
+        maxlength: 100,
         minlength: 8
     },
     firstName: {
@@ -40,7 +42,40 @@ const UserShema = new Schema({
         enum: ['male', 'female', 'other'],
         default: 'male'
     }
-})
+});
+
+
+
+UserShema.pre('save', function(next) {
+    // console.log('pre save');
+
+    let user = this._doc;
+    if (this.isNew || this.isModified('password')) {
+        bcrypt.genSalt(10, function(err, salt) {
+            if (err) return next(err);
+            bcrypt.hash(user.password, salt, function(err, hash) {
+                if (err) return next(err);
+    
+                user.password = hash;
+    
+                next();
+            });
+        });
+    } else {
+        next()
+    }
+   
+});
+
+UserShema.post('save', function(doc, next) {
+    // console.log('post save');
+
+    next()
+});
+
+
+
+
 
 
 module.exports = mongoose.model("User", UserShema);
