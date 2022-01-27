@@ -5,6 +5,46 @@ const User = require('../models/user');
 
 router.use('/auth', authRouter);
 
+
+
+
+router.get('/deleteUser', accessController(['admin']), function(req, res) {
+
+    res.json('user removed')
+})
+
+
+router.get('/createArticle', accessController(['admin', 'blogger']), function(req, res) {
+
+    res.json('article created')
+})
+
+
+// function accessController(req, res, next) {
+//     if (req.session.user.role !== "admin") {
+//         return res.status(403).send('Access denied!')
+//     };
+
+//     next();
+// }
+
+function accessController(roles) {
+    return function(req, res, next) {
+        if (!roles.includes(req.session.user.role)) {
+            return res.status(403).send('Access denied!')
+        };
+
+        next()
+    }
+}
+
+
+
+
+
+
+
+
 router.post('/createAdmin', function(req, res) {
     User.findOne({role: 'admin'}, (err, existAdmin) => {
         if (err) {
