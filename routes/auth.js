@@ -2,14 +2,16 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../models/user'); 
+const authTools = require('../tools/authTools'); 
 
 
 
-router.get('/registerPage', sessionChecker, (req, res) => {
+
+router.get('/registerPage', authTools.sessionChecker, (req, res) => {
     res.render('register', {msg: null})
 });
 
-router.get('/loginPage', sessionChecker, (req, res) => {
+router.get('/loginPage', authTools.sessionChecker, (req, res) => {
     res.render('login', {msg: null})
 });
 
@@ -104,27 +106,9 @@ router.get('/logout', (req, res) => {
 })
 
 
-// router.put('/updateUser', (req, res) => {
-//     User.findById(req.session.user._id, function(err, result) {
-
-//         result.username = req.body.username;
-//         result.password = req.body.newPass;
-
-
-
-//         result.save()
-
-//     })
-// })
 
 
 
 
-function sessionChecker(req, res, next) {
-    if (req.session.user && req.cookies.user_sid) {
-        return res.redirect('/api/auth/dashboard')
-    } 
-    next()
-}
 
 module.exports = router;
