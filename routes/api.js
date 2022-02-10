@@ -3,9 +3,11 @@ const router = express.Router();
 const authRouter = require('./auth');
 const userRouter = require('./user');
 const User = require('../models/user'); 
+const authTools = require('../tools/authTools')
+
 
 router.use('/auth', authRouter);
-router.use('/user', userRouter);
+router.use('/user', authTools.loginChecker, userRouter);
 
 
 
@@ -51,7 +53,7 @@ function accessController(roles) {
 router.post('/createAdmin', function(req, res) {
     User.findOne({role: 'admin'}, (err, existAdmin) => {
         if (err) {
-            return res.status(500).send('Somthing went wrong!')
+            return res.status(400).send('Somthing went wrong!')
         };
 
         if (existAdmin) {
@@ -69,7 +71,7 @@ router.post('/createAdmin', function(req, res) {
 
         ADMIN.save((err, admin) => {
             if (err) {
-                return res.status(500).send('Somthing went wrong!')
+                return res.status(400).send('Somthing went wrong!')
             };
 
             res.json(admin)

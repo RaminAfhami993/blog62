@@ -29,7 +29,7 @@ router.post('/register', (req, res) => {
 
     User.findOne({username: req.body.username.trim()}, (err, existUser) => {
         if (err) {
-            // return res.status(500).json({msg: "Somthing went wrong"})
+            // return res.status(400).json({msg: "Somthing went wrong"})
             return res.render('register', {msg: 'Somthing went wrong'})
 
         };
@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
 
         NEW_USER.save((err, user) => {
             if (err) {
-                // return res.status(500).json({msg: "Somthing went wrong"})
+                // return res.status(400).json({msg: "Somthing went wrong"})
                 return res.render('register', {msg: 'Somthing went wrong'})
 
             };
@@ -97,7 +97,7 @@ router.get('/dashboard', (req, res) => {
     if (!req.session.user || !req.cookies.user_sid) {
         return res.redirect('/api/auth/loginPage')
     };
-    res.render('dashboard', {_id: req.session.user._id, username: req.session.user.username})
+    res.render('dashboard', {avatar: req.session.user.avatar, _id: req.session.user._id, username: req.session.user.username})
 });
 
 router.get('/logout', (req, res) => {

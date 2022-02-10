@@ -1,9 +1,9 @@
 const express = require('express');
-const multer = require('multer');
 const router = express.Router();
 const User = require('../models/user'); 
-const generalTools = require('../tools/generalTools'); 
-
+const generalTools = require('../tools/generalTools');
+const fs = require('fs');
+const path = require('path');
 
 router.post('/uploadAvatar', (req, res) => {
     const upload = generalTools.upload.single('avatar');
@@ -11,12 +11,27 @@ router.post('/uploadAvatar', (req, res) => {
     upload(req, res, function(err) {
         if (err) {
             console.log(err);
-            return res.status(500).json({msg: "err"})
-        }
+            return res.redirect('/api/auth/dashboard')
+        };
 
-        res.json({msg: "ok"})
+        User.findByIdAndUpdate(req.session.user._id, {avatar: req.file.filename}, function(err, user) {
+            if (err) {
+                return res.status(400).json({msg: "err"})
+            };
+
+            try {
+                if (req.session.user.avatar) {
+                    fs.unlinkSync(path.join(__dirname, "../public/images/avatars", req.session.user.avatar))
+                };
+            } catch(err) {
+                return res.status(400).json({msg: "err"})
+            };
+
+            req.session.user.avatar = req.file.filename;
+
+            res.redirect('/api/auth/dashboard')
+        })
     })
-
 })
 
 

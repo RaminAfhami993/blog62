@@ -1,5 +1,5 @@
 const generalTools = {};
-const multer =  require('multer');
+const multer = require('multer');
 const path = require('path')
 
 
@@ -22,7 +22,7 @@ generalTools.upload = multer({
     fileFilter: function(req, file, cb) {
 
         console.log(file);
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/)) {
             return cb('invalid type!', false)
         }
         cb (null, true)
