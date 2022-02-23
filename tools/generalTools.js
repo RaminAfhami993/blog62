@@ -7,10 +7,14 @@ const path = require('path')
 
 const avatarStorage = multer.diskStorage({
     destination: function(req, file, cb) {
+        body = req.body;
+
         cb(null, path.join(__dirname, '../public/images/avatars'));
     },
-    filename: function(req, file, cb) {
-        
+    filename: function(req, file, cb) { 
+        body = req.body;
+
+
         cb(null, Date.now() + "_" + file.originalname);
     }
 });
@@ -20,6 +24,12 @@ const avatarStorage = multer.diskStorage({
 generalTools.upload = multer({
     storage: avatarStorage,
     fileFilter: function(req, file, cb) {
+        body = req.body;
+        
+        if (!req.body.title) {
+            return cb('empty title', false)
+        }
+
 
         console.log(file);
         if (!file.originalname.match(/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/)) {

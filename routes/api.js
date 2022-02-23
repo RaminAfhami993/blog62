@@ -8,6 +8,8 @@ const authTools = require('../tools/authTools')
 
 router.use('/auth', authRouter);
 router.use('/user', authTools.loginChecker, userRouter);
+// router.use('/article', authTools.loginChecker, articleRouter);
+
 
 
 

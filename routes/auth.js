@@ -66,7 +66,6 @@ router.post('/login', (req, res) => {
         return res.render('login', {msg: 'Not Acceptable'})
     };
 
-
     User.findOne({username: req.body.username}, (err, user) => {
         if (err) {
             return res.render('login', {msg: 'Somthing went wrong'})

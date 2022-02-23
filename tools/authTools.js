@@ -13,7 +13,7 @@ authTools.loginChecker = function(req, res, next)  {
     if (!req.session.user || !req.cookies.user_sid) {
         return res.status(403).send("Access denied!")
     } 
-    next()
+    next();
 }
 
 
