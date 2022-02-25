@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const articleController = require('../controllers/articleController')
-
+const acc = require('../tools/acc');
 
 // create article
 router.post('/', articleController.createArticle)
 
 
 // update article
-router.put('/', articleController.updateArticle)
+router.put('/:id', articleController.updateArticle)
 
 
 // delete article
-router.delete('/', articleController.deleteArticle)
+router.delete('/:id', articleController.deleteArticle)
 
 
 // get all articles
@@ -25,6 +25,10 @@ router.get('/myArticles', articleController.getMyArticles)
 
 // get single articles
 router.get('/:id', articleController.getSingleArticle)
+
+
+// admin delete article
+router.delete('/admin/:id', acc.accessController, articleController.adminDeleteArticleController)
 
 
 
