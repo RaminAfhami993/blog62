@@ -15,7 +15,7 @@ router.get('/loginPage', authTools.sessionChecker, (req, res) => {
     res.render('login', {msg: null})
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     if (!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.password) {
         // return res.status(406).json({msg: 'Not Acceptable'});
         return res.render('register', {msg: 'Not Acceptable'})
@@ -26,37 +26,59 @@ router.post('/register', (req, res) => {
         return res.render('register', {msg: 'Not Acceptable'});
     };
 
-
-    User.findOne({username: req.body.username.trim()}, (err, existUser) => {
-        if (err) {
-            // return res.status(400).json({msg: "Somthing went wrong"})
-            return res.render('register', {msg: 'Somthing went wrong'})
-
-        };
-
+    try {
+        let existUser = await User.findOne({username: req.body.username.trim()});
         if (existUser) {
             // return res.status(406).json({msg: "username already token"})
             return res.render('register', {msg: 'username already token'})
-
         };
+    } catch (err) {
+        return res.render('register', {msg: 'findOne err'})
+    }
 
-        const NEW_USER = new User({
-            username: req.body.username,
-            lastName: req.body.lastName,
-            firstName: req.body.firstName,
-            password: req.body.password
-        });
-
-        NEW_USER.save((err, user) => {
-            if (err) {
-                // return res.status(400).json({msg: "Somthing went wrong"})
-                return res.render('register', {msg: 'Somthing went wrong'})
-
-            };
-    
-            res.redirect('/api/auth/loginPage')
-        });  
+    const NEW_USER = new User({
+        username: req.body.username,
+        lastName: req.body.lastName,
+        firstName: req.body.firstName,
+        password: req.body.password
     });
+
+    try {
+        await NEW_USER.save();
+        res.redirect('/api/auth/loginPage')
+    } catch (err) {
+        return res.render('register', {msg: 'Somthing went wrong'})
+    }
+
+
+    // User.findOne({username: req.body.username.trim()}, (err, existUser) => {
+    //     if (err) {
+    //         // return res.status(400).json({msg: "Somthing went wrong"})
+    //         return res.render('register', {msg: 'Somthing went wrong'})
+    //     };
+
+    //     if (existUser) {
+    //         // return res.status(406).json({msg: "username already token"})
+    //         return res.render('register', {msg: 'username already token'})
+    //     };
+
+    //     const NEW_USER = new User({
+    //         username: req.body.username,
+    //         lastName: req.body.lastName,
+    //         firstName: req.body.firstName,
+    //         password: req.body.password
+    //     });
+
+    //     NEW_USER.save((err, user) => {
+    //         if (err) {
+    //             // return res.status(400).json({msg: "Somthing went wrong"})
+    //             return res.render('register', {msg: 'Somthing went wrong'})
+
+    //         };
+    
+    //         res.redirect('/api/auth/loginPage')
+    //     });  
+    // });
 });
 
 
@@ -111,3 +133,61 @@ router.get('/logout', (req, res) => {
 
 
 module.exports = router;
+
+
+
+
+
+
+
+// not important
+// const fs = require('fs');
+
+
+// fs.readFile('path1', 'utf-8', (err, data) => {
+//     if (err) console.log(err);
+//     fs.writeFile('path2', data, (err) => {
+//         if (err) console.log(err);
+//         fs.appendFile("path2", 'sample text', (err) => {
+//             if (err) console.log(err);
+            
+//         })
+//     })
+// })
+
+// let data;
+// try {
+//     data = fs.readFileSync('path1', 'utf-8');
+// } catch (err) {
+//     console.log(err);
+// }
+
+// try {
+//     fs.writeFileSync('path2', data);
+// } catch (err) {
+//     console.log(err);
+// }
+
+// try {
+//     fs.appendFileSync('path2', 'sample text')
+// } catch (err) {
+//     console.log(err);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
