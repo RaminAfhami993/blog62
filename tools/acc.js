@@ -6,15 +6,15 @@ function accessController(req, res, next) {
     next();
 }
 
-function accessController(roles) {
-    return function(req, res, next) {
-        if (!roles.includes(req.session.user.role)) {
-            return res.status(403).send('Access denied!')
-        };
+// function accessController(roles) {
+//     return function(req, res, next) {
+//         if (!roles.includes(req.session.user.role)) {
+//             return res.status(403).send('Access denied!')
+//         };
 
-        next()
-    }
-}
+//         next()
+//     }
+// }
 
 
 
