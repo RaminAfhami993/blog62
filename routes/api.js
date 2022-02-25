@@ -2,13 +2,26 @@ const express = require('express');
 const router = express.Router();
 const authRouter = require('./auth');
 const userRouter = require('./user');
+const articleRouter = require('./article');
 const User = require('../models/user'); 
 const authTools = require('../tools/authTools')
 
 
 router.use('/auth', authRouter);
 router.use('/user', authTools.loginChecker, userRouter);
-// router.use('/article', authTools.loginChecker, articleRouter);
+router.use('/article', authTools.loginChecker, articleRouter);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
