@@ -179,6 +179,39 @@ module.exports = router;
 
 
 
+const fs = require('fs');
+
+
+
+
+(async function() {
+    // fs.readFile(`${__dirname}/sample.txt`, 'utf8', function(err, data) {
+    //     if (err) {
+    //         return console.log(err);
+    //     };
+    
+    //     console.log(data);
+    // });
+
+    let data;
+    try {
+        data = await new Promise((resolve, reject) => {
+            fs.readFile(`${__dirname}/samle.txt`, 'utf8', function(err, data) {
+                if (err) {
+                    reject(err)
+                }
+    
+                resolve(data)
+            });
+        })
+    } catch (err) {
+        console.log("err ---> ", err);
+    }
+    console.log(data);
+})();
+
+
+
 
 
 
