@@ -2,8 +2,23 @@ const articleController = require('../controllers/articleController')
 const Article = require('../models/article');
 
 
-let getAllArticle = function(req, res) {
-    Article.find({})
+let getAllArticle = async function(req, res) {
+    try {
+
+        const articlesCount = await Article.countDocuments({});
+
+        const articles = await Article.find({}, {__v: 0})
+        .populate('user', 'avatar firstName lastName -_id')
+        // .populate('user', {avatar: 1, firstName: 1, lastName: 1})
+        .lean()
+        .skip((req.params.page - 1) * req.params.count)
+        .limit(req.params.count);
+
+
+        res.json({articles, articlesCount})
+    } catch (err) {
+        res.status(400).send('wrong')
+    }
 }
 
 let getMyArticles = function(req, res) {
@@ -14,7 +29,24 @@ let getSingleArticle = function(req, res) {
     Article.findById(req.params.id)
 }
 
-let createArticle = function(req, res) {
+let createArticle = async function(req, res) {
+
+    try {
+        let newArticle = await new Article({
+            title: req.body.title,
+            text: req.body.text,
+            user: req.session.user._id
+        }).save();
+
+
+        newArticle = newArticle.toObject();
+
+        let {__v, ...result} = newArticle
+
+        res.json(result);
+    } catch (err) {
+        res.status(400).send('wrong')
+    }
 
 }
 

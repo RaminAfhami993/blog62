@@ -7,6 +7,9 @@
     <title>Document</title>
 </head>
 <body>
+
+    <%- include('./partials/header', {test: 66}) %> 
+
     <div id="hiddenElement" style="display: none;" userId="<%= _id %>"></div>
     
     <% if (avatar) {%>

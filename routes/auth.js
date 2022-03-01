@@ -8,7 +8,7 @@ const authTools = require('../tools/authTools');
 
 
 router.get('/registerPage', authTools.sessionChecker, (req, res) => {
-    res.render('register', {msg: null})
+    res.render('register', {msg: null, num: 55})
 });
 
 router.get('/loginPage', authTools.sessionChecker, (req, res) => {

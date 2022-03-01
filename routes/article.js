@@ -16,7 +16,7 @@ router.delete('/:id', articleController.deleteArticle)
 
 
 // get all articles
-router.get('/all', articleController.getAllArticle)
+router.get('/all/:page/:count', articleController.getAllArticle)
 
 
 // get all articles
